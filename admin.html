@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة Nasr Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4 font-sans">
+    <div class="max-w-xl mx-auto">
+        <div class="bg-blue-600 p-4 rounded-xl text-white mb-6 flex justify-between items-center shadow-lg">
+            <h1 class="font-bold italic">لوحة الإدارة</h1>
+            <button onclick="auth.signOut()" class="text-xs opacity-80 underline">خروج</button>
+        </div>
+
+        <div id="orders" class="space-y-4">
+            <p class="text-center text-gray-400">تحميل الطلبات الجارية...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        const firebaseConfig = { /* ضعي الكود هنا */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (u) => { if(!u || u.email !== "admin@nasr.com") window.location.href="index.html"; else load(); });
+
+        async function load(){
+            const snap = await getDocs(collection(db, "orders"));
+            let h = "";
+            snap.forEach(d => {
+                const data = d.data();
+                h += `<div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-400 mb-2">${data.email}</p>
+                    <div class="bg-gray-50 p-3 rounded-lg text-sm mb-4">
+                        <b>ID:</b> ${data.playerID} | <b>الكمية:</b> ${data.amount}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="upd('${d.id}', 'مكتمل')" class="flex-1 bg-green-600 text-white p-2 rounded-lg text-xs font-bold">تم الشحن ✅</button>
+                        <button onclick="upd('${d.id}', 'مرفوض')" class="flex-1 bg-red-100 text-red-600 p-2 rounded-lg text-xs font-bold">رفض ❌</button>
+                    </div>
+                </div>`;
+            });
+            orders.innerHTML = h || "لا توجد طلبات";
+        }
+
+        window.upd = async (id, s) => {
+            await updateDoc(doc(db, "orders", id), { status: s });
+            alert("تم التحديث"); load();
+        };
+    </script>
+</body>
+</html>

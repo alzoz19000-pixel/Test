@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شحن FOFO - Nasr Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style> body { font-family: 'Cairo', sans-serif; background: #f8fafc; } </style>
+</head>
+<body>
+    <div class="bg-white p-4 shadow-sm flex items-center gap-4 mb-6">
+        <a href="dashboard.html" class="text-gray-500 text-xl"><i class="fas fa-arrow-right"></i></a>
+        <h1 class="text-lg font-bold">شحن فوفو شات</h1>
+    </div>
+
+    <div class="p-4 max-w-md mx-auto">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 text-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-24 h-24 rounded-2xl mx-auto shadow-md mb-4">
+            <h2 class="font-bold text-gray-800">FOFO CHAT COINS</h2>
+            <p class="text-xs text-blue-500 mt-1 italic">تسليم تلقائي وسريع</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2">الكمية (أقل شيء 100,000)</label>
+                <input id="amt" type="number" oninput="calc()" placeholder="100000" class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:border-blue-500 font-bold">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-2">معرف اللاعب (ID)</label>
+                <input id="pid" type="text" placeholder="اكتب الـ ID هنا" class="w-full p-4 bg-gray-50 border rounded-xl outline-none focus:border-blue-500">
+            </div>
+            <div class="bg-blue-50 p-4 rounded-xl flex justify-between items-center">
+                <span class="text-sm font-bold text-blue-800">إجمالي السعر:</span>
+                <span id="price" class="text-xl font-black text-blue-600">0 EGP</span>
+            </div>
+            <button onclick="order()" class="w-full bg-blue-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition active:scale-95">تأكيد الطلب</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, collection, updateDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        const firebaseConfig = { /* ضعي الكود هنا */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let bal = 0;
+        onAuthStateChanged(auth, async (u) => {
+            if(u){ const s = await getDoc(doc(db, "users", u.uid)); bal = s.data().balance; }
+        });
+
+        window.calc = () => {
+            price.innerText = amt.value >= 100000 ? (amt.value / 100000) * 50 + " EGP" : "0 EGP";
+        };
+
+        window.order = async () => {
+            const cost = (amt.value / 100000) * 50;
+            if(amt.value < 100000 || !pid.value) return alert("اكمل البيانات");
+            if(bal < cost) return alert("رصيدك غير كافٍ");
+
+            await addDoc(collection(db, "orders"), {
+                uid: auth.currentUser.uid, email: auth.currentUser.email,
+                amount: amt.value, playerID: pid.value, totalCost: cost,
+                status: "قيد التنفيذ", date: new Date().toLocaleString('ar-EG')
+            });
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: bal - cost });
+            alert("تم الطلب بنجاح!");
+            window.location.href="dashboard.html";
+        };
+    </script>
+</body>
+</html>

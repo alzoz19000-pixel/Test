@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasr Card - الرئيسية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style> body { font-family: 'Cairo', sans-serif; background: #f8fafc; } </style>
+</head>
+<body class="pb-20">
+    <nav class="bg-white p-4 shadow-sm flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-bold text-blue-600">NASR <span class="text-gray-700">CARD</span></h1>
+        <div class="flex items-center gap-3">
+            <span id="uName" class="text-sm font-bold text-gray-600">..</span>
+            <button onclick="auth.signOut()" class="text-red-500"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </nav>
+
+    <div class="p-4 max-w-md mx-auto">
+        <div class="bg-white p-6 rounded-2xl border-b-4 border-blue-600 shadow-sm mb-6 flex justify-between items-center">
+            <div>
+                <p class="text-xs text-gray-400">رصيد محفظتك</p>
+                <h2 class="text-3xl font-black text-gray-800 mt-1"><span id="uBalance">0</span> <span class="text-sm">EGP</span></h2>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
+                <i class="fas fa-wallet text-xl"></i>
+            </div>
+        </div>
+
+        <h3 class="font-bold text-gray-800 mb-4 px-1">الأقسام المتاحة</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="window.location.href='product.html'" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center cursor-pointer hover:shadow-md transition">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-16 h-16 rounded-2xl mb-3 shadow-sm">
+                <span class="font-bold text-sm text-gray-800">FOFO CHAT</span>
+            </div>
+            <div onclick="window.location.href='https://wa.me/201055936987'" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center cursor-pointer hover:shadow-md transition text-center">
+                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-3 text-2xl">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <span class="font-bold text-sm text-gray-800">شحن الرصيد</span>
+            </div>
+        </div>
+
+        <div class="mt-6 space-y-3">
+            <button onclick="window.location.href='orders.html'" class="w-full bg-white p-4 rounded-xl shadow-sm text-right flex justify-between items-center border border-gray-50">
+                <span class="font-bold text-gray-700 text-sm"><i class="fas fa-history ml-2 text-blue-500"></i> سجل طلباتي</span>
+                <i class="fas fa-chevron-left text-gray-300"></i>
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+        const firebaseConfig = { /* ضعي الكود هنا */ };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) window.location.href = "index.html";
+            else {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if(snap.exists()){
+                    uName.innerText = snap.data().name;
+                    uBalance.innerText = snap.data().balance;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
