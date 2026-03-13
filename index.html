@@ -3,65 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NASR CARD - دخول</title>
+    <title>Nasr Card - الرئيسية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #f4f7fe; }
-        .s-input { border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px; width: 100%; outline: none; transition: 0.3s; background: #fff; font-size: 14px; }
-        .s-input:focus { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
-        .btn-sultan { background: linear-gradient(135deg, #007bff, #0056b3); color: white; font-weight: bold; border-radius: 14px; padding: 14px; width: 100%; transition: 0.3s; border: none; shadow: 0 4px 15px rgba(0, 123, 255, 0.2); cursor: pointer; }
-        .btn-google { background: white; color: #444; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; width: 100%; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; cursor: pointer; }
-        .btn-google:hover { background: #f8fafc; }
-        .card-animate { animation: slideUp 0.5s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Cairo', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+        .gold-text { color: #d4af37; }
+        .gold-bg { background: linear-gradient(135deg, #d4af37, #f9d976); }
+        .dark-card { background: #161616; border: 1px solid #262626; border-radius: 20px; transition: 0.3s; overflow: hidden; }
+        .dark-card:active { transform: scale(0.95); border-color: #d4af37; }
+        .search-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 50px; padding: 12px 20px; width: 100%; outline: none; color: #fff; font-size: 14px; text-align: center; }
+        .nav-blur { background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #222; }
+        .modal-animate { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
-    <div class="bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-sm border border-gray-50 card-animate">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-black text-blue-600 italic tracking-tighter">NASR <span class="text-gray-800">CARD</span></h1>
-            <div class="h-1 w-12 bg-blue-600 mx-auto mt-2 rounded-full"></div>
-        </div>
-        
-        <div id="loginForm" class="space-y-5">
-            <h3 class="text-center font-bold text-gray-700 text-lg">تسجيل الدخول</h3>
-            <div class="space-y-4">
-                <input id="email" type="email" placeholder="البريد الإلكتروني" class="s-input">
-                <input id="pass" type="password" placeholder="كلمة المرور" class="s-input">
-            </div>
-            <button onclick="login()" class="btn-sultan text-lg">دخول</button>
-            
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-100"></div></div>
-                <div class="relative flex justify-center text-[10px] uppercase"><span class="px-2 bg-white text-gray-400 font-bold">أو المتابعة عبر</span></div>
-            </div>
+<body class="pb-24">
 
-            <button onclick="loginWithGoogle()" class="btn-google">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-                Google
+    <nav class="nav-blur p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 gold-bg rounded-lg flex items-center justify-center text-black shadow-lg">
+                <i class="fas fa-crown text-sm"></i>
+            </div>
+            <h1 class="text-lg font-black italic gold-text tracking-tighter">NASR <span class="text-white">CARD</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="signOutUser()" class="text-gray-400 hover:text-red-500 transition-colors">
+                <i class="fas fa-sign-out-alt text-xl"></i>
             </button>
+        </div>
+    </nav>
 
-            <p class="text-center text-sm text-gray-500 mt-6">جديد هنا؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">أنشئ حساب</span></p>
+    <div class="p-4 max-w-md mx-auto">
+        
+        <div class="relative w-full rounded-2xl overflow-hidden mb-6 border border-[#333]">
+            <img src="https://img.freepik.com/free-vector/ramadan-kareem-banner-with-lanterns_1017-31181.jpg" class="w-full h-44 object-cover">
         </div>
 
-        <div id="regForm" class="hidden space-y-5">
-            <h3 class="text-center font-bold text-gray-700 text-lg">حساب جديد</h3>
-            <div class="space-y-4">
-                <input id="regName" type="text" placeholder="الاسم بالكامل" class="s-input">
-                <input id="regEmail" type="email" placeholder="البريد الإلكتروني" class="s-input">
-                <input id="regPass" type="password" placeholder="كلمة المرور" class="s-input">
+        <div class="dark-card p-4 mb-8 flex justify-between items-center bg-gradient-to-l from-[#1a1a1a] to-[#111]">
+            <div class="flex items-center gap-3">
+                <div id="userInitial" class="w-12 h-12 gold-bg rounded-full flex items-center justify-center text-black font-black text-xl border-2 border-black">U</div>
+                <div>
+                    <p id="uNameDisplay" class="font-bold text-sm text-gray-200 italic tracking-wide">جاري التحميل..</p>
+                    <p class="text-[11px] text-gray-500 italic">رصيدك: <span id="uBalance" class="gold-text font-bold text-sm">0</span> EGP</p>
+                </div>
             </div>
-            <button onclick="register()" class="btn-sultan bg-gradient-to-tr from-green-600 to-green-500 text-lg">تأكيد الحساب</button>
-            <p class="text-center text-sm text-gray-500 mt-6">لديك حساب؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">سجل دخول</span></p>
+            <div class="text-left bg-black/30 p-2 rounded-lg border border-white/5">
+                <p class="text-[8px] text-gray-500 mb-1">ID USER</p>
+                <span id="uID" class="text-[10px] font-mono text-gray-400">..</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="openChatModal()" class="dark-card group cursor-pointer">
+                <div class="relative h-32">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                </div>
+                <p class="p-3 text-center text-xs font-bold">برامج الدردشة</p>
+            </div>
+
+            <div class="dark-card opacity-50">
+                <div class="h-32 bg-[#222] flex items-center justify-center text-3xl text-gray-600">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <p class="p-3 text-center text-xs font-bold">قريباً</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="chatModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-[#161616] w-full max-w-sm rounded-[2.5rem] border border-[#333] overflow-hidden modal-animate shadow-2xl">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="gold-text font-black text-lg italic tracking-widest">ORDER SERVICE</h3>
+                    <button onclick="closeChatModal()" class="text-white bg-[#222] w-8 h-8 rounded-full flex items-center justify-center font-bold">&times;</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="dark-card p-4 flex items-center gap-4 border-gold-text/20">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-12 h-12 rounded-xl">
+                        <p class="font-bold text-sm">FOFO CHAT RECHARGE</p>
+                    </div>
+
+                    <div class="p-4 bg-black/40 rounded-3xl border border-[#333] space-y-4">
+                        <input id="targetID" type="text" placeholder="أدخل ID الحساب (فوفو)" class="search-bar border-gold-text/10">
+                        <input id="coinInput" type="number" oninput="calculate()" placeholder="الكمية (مثلاً 100000)" class="search-bar">
+                        
+                        <div class="flex justify-between items-center px-2 py-1 border-t border-[#222] pt-3">
+                            <span class="text-[10px] text-gray-500 uppercase">Total Price</span>
+                            <span class="gold-text font-black text-xl"><span id="finalPrice">0</span> <span class="text-[10px]">EGP</span></span>
+                        </div>
+                        
+                        <button id="orderBtn" onclick="sendOrder()" class="w-full gold-bg text-black font-black p-4 rounded-2xl active:scale-95 transition-all">تأكيد الطلب</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
@@ -75,67 +121,74 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
 
-        window.toggle = () => {
-            document.getElementById('loginForm').classList.toggle('hidden');
-            document.getElementById('regForm').classList.toggle('hidden');
+        // وظائف الواجهة
+        window.openChatModal = () => document.getElementById('chatModal').classList.remove('hidden');
+        window.closeChatModal = () => document.getElementById('chatModal').classList.add('hidden');
+        
+        window.calculate = () => {
+            const amount = document.getElementById('coinInput').value;
+            const price = (amount / 100000) * 50;
+            document.getElementById('finalPrice').innerText = amount >= 100000 ? Math.round(price) : "0";
         };
 
-        // تسجيل الدخول
-        window.login = async () => {
-            const e = document.getElementById('email').value.trim();
-            const p = document.getElementById('pass').value.trim();
-            if(!e || !p) return alert("يرجى كتابة البريد وكلمة المرور");
-            try { 
-                await signInWithEmailAndPassword(auth, e, p); 
-            } catch(err) { 
-                alert("خطأ: البريد أو كلمة المرور غير صحيحة"); 
+        // إرسال الطلب وحفظه في الـ Database
+        window.sendOrder = async () => {
+            const target = document.getElementById('targetID').value.trim();
+            const amount = document.getElementById('coinInput').value;
+            const price = document.getElementById('finalPrice').innerText;
+            const btn = document.getElementById('orderBtn');
+
+            if (!target) return alert("خطأ: يرجى كتابة ID الحساب المراد شحنه!");
+            if (amount < 100000) return alert("خطأ: أقل كمية شحن هي 100,000 كوين");
+
+            btn.disabled = true;
+            btn.innerText = "جاري الحفظ...";
+
+            try {
+                // حفظ الطلب في Firestore
+                await addDoc(collection(db, "orders"), {
+                    userId: auth.currentUser.uid,
+                    userName: document.getElementById('uNameDisplay').innerText,
+                    targetAppID: target,
+                    amount: amount,
+                    price: price,
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+
+                // توجيه للواتساب
+                const text = `طلب شحن جديد 👑%0AID الحساب: ${target}%0Aالكمية: ${amount}%0Aالسعر: ${price} EGP`;
+                window.location.href = `https://wa.me/201055936987?text=${text}`;
+
+                alert("تم تسجيل طلبك بنجاح ✅");
+                closeChatModal();
+            } catch (e) {
+                alert("حدث خطأ في النظام");
+                btn.disabled = false;
             }
         };
 
-        // إنشاء الحساب (التعديل المطلوب: تنبيه ثم تحويل لواجهة الدخول)
-        window.register = async () => {
-            const n = document.getElementById('regName').value.trim();
-            const e = document.getElementById('regEmail').value.trim();
-            const p = document.getElementById('regPass').value.trim();
-            if(!n || !e || !p) return alert("أكمل البيانات أولاً");
-            try {
-                const res = await createUserWithEmailAndPassword(auth, e, p);
-                await setDoc(doc(db, "users", res.user.uid), { name: n, balance: 0, email: e, role: "user", uid: res.user.uid });
-                
-                alert("✅ تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول الآن.");
-                
-                // تسجيل الخروج فوراً ليبقى في صفحة الدخول ولا يحول للداشبورد تلقائياً
-                await signOut(auth);
-                
-                // العودة لواجهة تسجيل الدخول ومسح الخانات
-                document.getElementById('regName').value = "";
-                document.getElementById('regEmail').value = "";
-                document.getElementById('regPass').value = "";
-                toggle(); 
-                
-            } catch(err) { alert("حدث خطأ: " + err.message); }
-        };
-
-        // دخول جوجل
-        window.loginWithGoogle = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (!userDoc.exists()) {
-                    await setDoc(doc(db, "users", user.uid), { name: user.displayName, email: user.email, balance: 0, role: "user", uid: user.uid });
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+            } else {
+                document.getElementById('uID').innerText = user.uid;
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if(snap.exists()){
+                    const data = snap.data();
+                    document.getElementById('uNameDisplay').innerText = data.name;
+                    document.getElementById('uBalance').innerText = data.balance;
+                    document.getElementById('userInitial').innerText = data.name.charAt(0).toUpperCase();
                 }
-            } catch (error) { alert("فشل الاتصال بجوجل"); }
-        };
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if(user.email === "admin@nasr.com") window.location.href = "admin.html";
-                else window.location.href = "dashboard.html";
             }
         });
+
+        window.signOutUser = () => {
+            if(confirm("هل تريد الخروج؟")) {
+                signOut(auth).then(() => window.location.href = "index.html");
+            }
+        };
     </script>
 </body>
 </html>
