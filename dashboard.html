@@ -14,11 +14,34 @@
         <h1 class="text-xl font-bold text-blue-600">NASR <span class="text-gray-700">CARD</span></h1>
         <div class="flex items-center gap-3">
             <span id="uName" class="text-sm font-bold text-gray-600">..</span>
-            <button onclick="auth.signOut()" class="text-red-500"><i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="signOutUser()" class="text-red-500"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </nav>
 
     <div class="p-4 max-w-md mx-auto">
+        
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
+            <div class="flex items-center gap-4 mb-5">
+                <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-blue-400 text-white rounded-full flex items-center justify-center font-bold text-2xl shadow-lg border-2 border-white">
+                    <span id="userInitial">U</span>
+                </div>
+                <div>
+                    <h2 id="uNameDisplay" class="font-bold text-gray-800 text-lg">..</h2>
+                    <p class="text-[10px] text-green-500 font-bold italic"><i class="fas fa-check-circle ml-1"></i>حساب موثق</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-3 rounded-xl flex justify-between items-center border border-gray-200">
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-[9px] text-gray-400 font-bold uppercase">User ID / المعرف</p>
+                    <p id="uID" class="text-[11px] font-mono text-blue-600 font-bold mt-1 truncate">Loading..</p>
+                </div>
+                <button onclick="copyID()" class="bg-white border border-gray-200 text-gray-400 w-9 h-9 rounded-lg hover:text-blue-600 transition-all flex items-center justify-center active:scale-90 shadow-sm">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="bg-white p-6 rounded-2xl border-b-4 border-blue-600 shadow-sm mb-6 flex justify-between items-center">
             <div>
                 <p class="text-xs text-gray-400">رصيد محفظتك</p>
@@ -53,7 +76,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
         const firebaseConfig = { /* ضعي الكود هنا */ };
@@ -62,15 +85,43 @@
         const db = getFirestore(app);
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) window.location.href = "index.html";
-            else {
+            if (!user) {
+                window.location.href = "index.html";
+            } else {
+                // عرض الـ UID
+                document.getElementById('uID').innerText = user.uid;
+                
                 const snap = await getDoc(doc(db, "users", user.uid));
                 if(snap.exists()){
-                    uName.innerText = snap.data().name;
-                    uBalance.innerText = snap.data().balance;
+                    const data = snap.data();
+                    const name = data.name || "مستخدم";
+                    
+                    // تحديث النصوص في الصفحة
+                    document.getElementById('uName').innerText = name;
+                    document.getElementById('uNameDisplay').innerText = name;
+                    document.getElementById('uBalance').innerText = data.balance;
+                    document.getElementById('userInitial').innerText = name.charAt(0).toUpperCase();
                 }
             }
         });
+
+        // دالة الخروج
+        window.signOutUser = () => {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
+        };
+
+        // دالة النسخ
+        window.copyID = () => {
+            const idText = document.getElementById('uID').innerText;
+            navigator.clipboard.writeText(idText).then(() => {
+                alert("تم نسخ الـ ID بنجاح ✅");
+            });
+        };
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
