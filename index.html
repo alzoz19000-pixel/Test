@@ -3,158 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nasr Card - إنشاء حساب جديد</title>
+    <title>Nasr Card - الرئيسية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #0d0118; /* اللون الداكن من سكرين شوت سلطان كارد */
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .register-container {
-            width: 100%;
-            max-width: 450px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 40px 30px;
-            border-radius: 35px;
-            border: 1px solid rgba(212, 175, 55, 0.05);
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .logo-box {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 30px;
-            background: linear-gradient(135deg, #d4af37, #f9d976);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform: rotate(-5deg);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-        }
-
-        .input-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .input-field {
-            background: #1a1025; /* لون الحقول من الصورة */
-            border: 1px solid #2d1b40;
-            border-radius: 15px;
-            padding: 14px 18px;
-            width: 100%;
-            color: #fff;
-            outline: none;
-            transition: 0.3s;
-            font-size: 14px;
-            text-align: right;
-        }
-
-        .input-field:focus {
-            border-color: #d4af37;
-            background: #231633;
-        }
-
-        .btn-register {
-            background: linear-gradient(to right, #d4af37, #f9d976);
-            color: #000;
-            font-weight: 900;
-            border: none;
-            border-radius: 15px;
-            padding: 16px;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: 0.3s;
-            font-size: 16px;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-register:active { transform: scale(0.97); }
-
-        .requirements {
-            font-size: 11px;
-            color: #666;
-            text-align: right;
-            margin: 12px 5px;
-            list-style: none;
-            padding: 0;
-        }
-
-        .requirements li { margin-bottom: 4px; }
-        .requirements li::before {
-            content: "•";
-            color: #d4af37;
-            margin-left: 8px;
-            font-weight: bold;
-        }
-
-        .footer-text {
-            margin-top: 30px;
-            font-size: 13px;
-            color: #888;
-        }
-
-        .footer-text a {
-            color: #d4af37;
-            font-weight: bold;
-            text-decoration: none;
-            margin-right: 5px;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #0d0118; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .auth-container { width: 100%; max-width: 420px; background: rgba(255, 255, 255, 0.02); padding: 40px 30px; border-radius: 35px; border: 1px solid rgba(212, 175, 55, 0.1); text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .logo-box { width: 85px; height: 85px; margin: 0 auto 35px; background: #f9d976; border-radius: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(249, 217, 118, 0.2); transform: rotate(-3deg); }
+        .input-field { background: #1a1025; border: 1px solid #2d1b40; border-radius: 14px; padding: 14px 18px; width: 100%; color: #fff; outline: none; transition: 0.3s; font-size: 14px; text-align: right; margin-bottom: 12px; }
+        .input-field:focus { border-color: #f9d976; background: #231633; }
+        .btn-main { background: linear-gradient(135deg, #d4af37, #f9d976); color: #000; font-weight: 900; border: none; border-radius: 14px; padding: 16px; width: 100%; cursor: pointer; margin-top: 15px; transition: 0.3s; font-size: 16px; box-shadow: 0 10px 15px -3px rgba(212, 175, 55, 0.3); }
+        .btn-main:active { transform: scale(0.96); }
+        .btn-google { background: #fff; color: #000; font-weight: bold; border-radius: 14px; padding: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; cursor: pointer; transition: 0.3s; border: none; }
+        .requirements { font-size: 10px; color: #666; text-align: right; margin: 5px 5px 15px; list-style: none; padding: 0; }
+        .requirements li::before { content: "•"; color: #f9d976; margin-left: 8px; }
+        .hidden { display: none; }
+        .divider { display: flex; align-items: center; margin: 25px 0; color: #333; font-size: 12px; font-weight: bold; }
+        .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid #222; margin: 0 15px; }
+        .gold-text { color: #f9d976; }
     </style>
 </head>
 <body>
 
-    <div class="register-container">
+    <div class="auth-container">
         <div class="logo-box">
             <i class="fas fa-crown text-4xl text-black"></i>
         </div>
 
-        <form id="registerForm">
-            <div class="input-row">
-                <input type="text" id="lastName" placeholder="الاسم الأخير" class="input-field" required>
-                <input type="text" id="firstName" placeholder="الاسم الأول" class="input-field" required>
-            </div>
-
-            <input type="text" id="username" placeholder="اسم المستخدم" class="input-field mb-4" required>
-            
-            <input type="password" id="password" placeholder="كلمة السر" class="input-field mb-1" required>
-            
-            <ul class="requirements">
-                <li>يجب أن تحتوي حرف صغير</li>
-                <li>يجب أن تحتوي حرف كبير</li>
-                <li>يجب أن تحتوي رقم</li>
-                <li>يجب أن تحتوي رمز</li>
-            </ul>
-
-            <input type="email" id="email" placeholder="البريد الإلكتروني" class="input-field mt-3" required>
-
-            <button type="submit" id="submitBtn" class="btn-register">تسجيل</button>
-        </form>
-
-        <div class="footer-text">
-            هل لديك حساب؟ 
-            <a href="login.html">دخول</a>
+        <div id="loginSection">
+            <h2 class="text-2xl font-black mb-8 italic">تسجيل الدخول</h2>
+            <form id="loginForm">
+                <input type="email" id="lEmail" placeholder="البريد الإلكتروني" class="input-field" required>
+                <input type="password" id="lPass" placeholder="كلمة السر" class="input-field" required>
+                <button type="submit" class="btn-main">دخول</button>
+            </form>
+            <p class="mt-6 text-sm text-gray-400">ليس لديك حساب؟ <span onclick="switchAuth()" class="gold-text cursor-pointer font-black underline">إنشاء حساب</span></p>
         </div>
+
+        <div id="registerSection" class="hidden">
+            <h2 class="text-2xl font-black mb-8 italic">حساب جديد</h2>
+            <form id="registerForm">
+                <div class="flex gap-3 mb-1">
+                    <input type="text" id="rLast" placeholder="الاسم الأخير" class="input-field" required>
+                    <input type="text" id="rFirst" placeholder="الاسم الأول" class="input-field" required>
+                </div>
+                <input type="text" id="rUser" placeholder="اسم المستخدم" class="input-field" required>
+                <input type="password" id="rPass" placeholder="كلمة السر" class="input-field" required>
+                <ul class="requirements">
+                    <li>حرف كبير وصغير</li>
+                    <li>أرقام ورموز</li>
+                </ul>
+                <input type="email" id="rEmail" placeholder="البريد الإلكتروني" class="input-field" required>
+                <button type="submit" class="btn-main">تسجيل</button>
+            </form>
+            <p class="mt-6 text-sm text-gray-400">لديك حساب؟ <span onclick="switchAuth()" class="gold-text cursor-pointer font-black underline">سجل دخول</span></p>
+        </div>
+
+        <div class="divider">أو</div>
+
+        <button id="googleBtn" class="btn-google">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
+            بواسطة حساب GOOGLE
+        </button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
         // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
@@ -170,47 +87,57 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const username = document.getElementById('username').value;
+        // التبديل بين الأقسام
+        window.switchAuth = () => {
+            document.getElementById('loginSection').classList.toggle('hidden');
+            document.getElementById('registerSection').classList.toggle('hidden');
+        };
 
-            btn.disabled = true;
-            btn.innerText = "جاري إنشاء الحساب...";
+        // فحص إذا كان المستخدم مسجل دخول بالفعل
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = "dashboard.html";
+        });
 
-            try {
-                // 1. إنشاء الحساب في Firebase Auth
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // 2. ربط وحفظ البيانات في Firestore Database
-                await setDoc(doc(db, "users", user.uid), {
-                    name: firstName + " " + lastName,
-                    username: username,
-                    email: email,
-                    balance: 0, // رصيد افتتاحي
+        // وظيفة حفظ بيانات المستخدم
+        async function syncUser(user, fullName = null) {
+            const ref = doc(db, "users", user.uid);
+            const snap = await getDoc(ref);
+            if (!snap.exists()) {
+                await setDoc(ref, {
+                    name: fullName || user.displayName || "مستخدم نصر",
+                    email: user.email,
+                    balance: 0,
                     uid: user.uid,
-                    role: "user", // لتحديد أنه ليس أدمن
                     createdAt: new Date()
                 });
-
-                alert("تم التسجيل بنجاح يا بطل! 👑");
-                window.location.href = "dashboard.html";
-
-            } catch (error) {
-                btn.disabled = false;
-                btn.innerText = "تسجيل";
-                if (error.code === 'auth/email-already-in-use') {
-                    alert("هذا البريد مسجل مسبقاً!");
-                } else {
-                    alert("خطأ: " + error.message);
-                }
             }
-        });
+        }
+
+        // 1. تسجيل الدخول
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            try {
+                await signInWithEmailAndPassword(auth, lEmail.value, lPass.value);
+            } catch (err) { alert("خطأ في بيانات الدخول!"); }
+        };
+
+        // 2. إنشاء حساب
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault();
+            try {
+                const res = await createUserWithEmailAndPassword(auth, rEmail.value, rPass.value);
+                await syncUser(res.user, `${rFirst.value} ${rLast.value}`);
+            } catch (err) { alert("فشل التسجيل: " + err.message); }
+        };
+
+        // 3. الدخول عبر جوجل
+        document.getElementById('googleBtn').onclick = async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const res = await signInWithPopup(auth, provider);
+                await syncUser(res.user);
+            } catch (err) { console.error(err); }
+        };
     </script>
 </body>
 </html>
