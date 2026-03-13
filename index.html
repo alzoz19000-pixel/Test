@@ -2,113 +2,161 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nasr Card - الرئيسية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nasr Card - إنشاء حساب جديد</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
-        .gold-text { color: #d4af37; }
-        .gold-bg { background: linear-gradient(135deg, #d4af37, #f9d976); }
-        .dark-card { background: #161616; border: 1px solid #262626; border-radius: 20px; transition: 0.3s; overflow: hidden; }
-        .dark-card:active { transform: scale(0.95); border-color: #d4af37; }
-        .search-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 50px; padding: 12px 20px; width: 100%; outline: none; color: #fff; font-size: 14px; text-align: center; }
-        .nav-blur { background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #222; }
-        .modal-animate { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0d0118; /* اللون الداكن من سكرين شوت سلطان كارد */
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 40px 30px;
+            border-radius: 35px;
+            border: 1px solid rgba(212, 175, 55, 0.05);
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .logo-box {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #d4af37, #f9d976);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-5deg);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .input-field {
+            background: #1a1025; /* لون الحقول من الصورة */
+            border: 1px solid #2d1b40;
+            border-radius: 15px;
+            padding: 14px 18px;
+            width: 100%;
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .input-field:focus {
+            border-color: #d4af37;
+            background: #231633;
+        }
+
+        .btn-register {
+            background: linear-gradient(to right, #d4af37, #f9d976);
+            color: #000;
+            font-weight: 900;
+            border: none;
+            border-radius: 15px;
+            padding: 16px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.3s;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-register:active { transform: scale(0.97); }
+
+        .requirements {
+            font-size: 11px;
+            color: #666;
+            text-align: right;
+            margin: 12px 5px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .requirements li { margin-bottom: 4px; }
+        .requirements li::before {
+            content: "•";
+            color: #d4af37;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .footer-text a {
+            color: #d4af37;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 5px;
+        }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
-    <nav class="nav-blur p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 gold-bg rounded-lg flex items-center justify-center text-black shadow-lg">
-                <i class="fas fa-crown text-sm"></i>
-            </div>
-            <h1 class="text-lg font-black italic gold-text tracking-tighter">NASR <span class="text-white">CARD</span></h1>
-        </div>
-        <div class="flex items-center gap-3">
-            <button onclick="signOutUser()" class="text-gray-400 hover:text-red-500 transition-colors">
-                <i class="fas fa-sign-out-alt text-xl"></i>
-            </button>
-        </div>
-    </nav>
-
-    <div class="p-4 max-w-md mx-auto">
-        
-        <div class="relative w-full rounded-2xl overflow-hidden mb-6 border border-[#333]">
-            <img src="https://img.freepik.com/free-vector/ramadan-kareem-banner-with-lanterns_1017-31181.jpg" class="w-full h-44 object-cover">
+    <div class="register-container">
+        <div class="logo-box">
+            <i class="fas fa-crown text-4xl text-black"></i>
         </div>
 
-        <div class="dark-card p-4 mb-8 flex justify-between items-center bg-gradient-to-l from-[#1a1a1a] to-[#111]">
-            <div class="flex items-center gap-3">
-                <div id="userInitial" class="w-12 h-12 gold-bg rounded-full flex items-center justify-center text-black font-black text-xl border-2 border-black">U</div>
-                <div>
-                    <p id="uNameDisplay" class="font-bold text-sm text-gray-200 italic tracking-wide">جاري التحميل..</p>
-                    <p class="text-[11px] text-gray-500 italic">رصيدك: <span id="uBalance" class="gold-text font-bold text-sm">0</span> EGP</p>
-                </div>
-            </div>
-            <div class="text-left bg-black/30 p-2 rounded-lg border border-white/5">
-                <p class="text-[8px] text-gray-500 mb-1">ID USER</p>
-                <span id="uID" class="text-[10px] font-mono text-gray-400">..</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div onclick="openChatModal()" class="dark-card group cursor-pointer">
-                <div class="relative h-32">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-                </div>
-                <p class="p-3 text-center text-xs font-bold">برامج الدردشة</p>
+        <form id="registerForm">
+            <div class="input-row">
+                <input type="text" id="lastName" placeholder="الاسم الأخير" class="input-field" required>
+                <input type="text" id="firstName" placeholder="الاسم الأول" class="input-field" required>
             </div>
 
-            <div class="dark-card opacity-50">
-                <div class="h-32 bg-[#222] flex items-center justify-center text-3xl text-gray-600">
-                    <i class="fas fa-gamepad"></i>
-                </div>
-                <p class="p-3 text-center text-xs font-bold">قريباً</p>
-            </div>
-        </div>
-    </div>
+            <input type="text" id="username" placeholder="اسم المستخدم" class="input-field mb-4" required>
+            
+            <input type="password" id="password" placeholder="كلمة السر" class="input-field mb-1" required>
+            
+            <ul class="requirements">
+                <li>يجب أن تحتوي حرف صغير</li>
+                <li>يجب أن تحتوي حرف كبير</li>
+                <li>يجب أن تحتوي رقم</li>
+                <li>يجب أن تحتوي رمز</li>
+            </ul>
 
-    <div id="chatModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
-        <div class="bg-[#161616] w-full max-w-sm rounded-[2.5rem] border border-[#333] overflow-hidden modal-animate shadow-2xl">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="gold-text font-black text-lg italic tracking-widest">ORDER SERVICE</h3>
-                    <button onclick="closeChatModal()" class="text-white bg-[#222] w-8 h-8 rounded-full flex items-center justify-center font-bold">&times;</button>
-                </div>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" class="input-field mt-3" required>
 
-                <div class="space-y-4">
-                    <div class="dark-card p-4 flex items-center gap-4 border-gold-text/20">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-12 h-12 rounded-xl">
-                        <p class="font-bold text-sm">FOFO CHAT RECHARGE</p>
-                    </div>
+            <button type="submit" id="submitBtn" class="btn-register">تسجيل</button>
+        </form>
 
-                    <div class="p-4 bg-black/40 rounded-3xl border border-[#333] space-y-4">
-                        <input id="targetID" type="text" placeholder="أدخل ID الحساب (فوفو)" class="search-bar border-gold-text/10">
-                        <input id="coinInput" type="number" oninput="calculate()" placeholder="الكمية (مثلاً 100000)" class="search-bar">
-                        
-                        <div class="flex justify-between items-center px-2 py-1 border-t border-[#222] pt-3">
-                            <span class="text-[10px] text-gray-500 uppercase">Total Price</span>
-                            <span class="gold-text font-black text-xl"><span id="finalPrice">0</span> <span class="text-[10px]">EGP</span></span>
-                        </div>
-                        
-                        <button id="orderBtn" onclick="sendOrder()" class="w-full gold-bg text-black font-black p-4 rounded-2xl active:scale-95 transition-all">تأكيد الطلب</button>
-                    </div>
-                </div>
-            </div>
+        <div class="footer-text">
+            هل لديك حساب؟ 
+            <a href="login.html">دخول</a>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
             authDomain: "foforecharge.firebaseapp.com",
@@ -122,73 +170,47 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // وظائف الواجهة
-        window.openChatModal = () => document.getElementById('chatModal').classList.remove('hidden');
-        window.closeChatModal = () => document.getElementById('chatModal').classList.add('hidden');
-        
-        window.calculate = () => {
-            const amount = document.getElementById('coinInput').value;
-            const price = (amount / 100000) * 50;
-            document.getElementById('finalPrice').innerText = amount >= 100000 ? Math.round(price) : "0";
-        };
-
-        // إرسال الطلب وحفظه في الـ Database
-        window.sendOrder = async () => {
-            const target = document.getElementById('targetID').value.trim();
-            const amount = document.getElementById('coinInput').value;
-            const price = document.getElementById('finalPrice').innerText;
-            const btn = document.getElementById('orderBtn');
-
-            if (!target) return alert("خطأ: يرجى كتابة ID الحساب المراد شحنه!");
-            if (amount < 100000) return alert("خطأ: أقل كمية شحن هي 100,000 كوين");
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const username = document.getElementById('username').value;
 
             btn.disabled = true;
-            btn.innerText = "جاري الحفظ...";
+            btn.innerText = "جاري إنشاء الحساب...";
 
             try {
-                // حفظ الطلب في Firestore
-                await addDoc(collection(db, "orders"), {
-                    userId: auth.currentUser.uid,
-                    userName: document.getElementById('uNameDisplay').innerText,
-                    targetAppID: target,
-                    amount: amount,
-                    price: price,
-                    status: "pending",
-                    timestamp: serverTimestamp()
+                // 1. إنشاء الحساب في Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. ربط وحفظ البيانات في Firestore Database
+                await setDoc(doc(db, "users", user.uid), {
+                    name: firstName + " " + lastName,
+                    username: username,
+                    email: email,
+                    balance: 0, // رصيد افتتاحي
+                    uid: user.uid,
+                    role: "user", // لتحديد أنه ليس أدمن
+                    createdAt: new Date()
                 });
 
-                // توجيه للواتساب
-                const text = `طلب شحن جديد 👑%0AID الحساب: ${target}%0Aالكمية: ${amount}%0Aالسعر: ${price} EGP`;
-                window.location.href = `https://wa.me/201055936987?text=${text}`;
+                alert("تم التسجيل بنجاح يا بطل! 👑");
+                window.location.href = "dashboard.html";
 
-                alert("تم تسجيل طلبك بنجاح ✅");
-                closeChatModal();
-            } catch (e) {
-                alert("حدث خطأ في النظام");
+            } catch (error) {
                 btn.disabled = false;
-            }
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = "index.html";
-            } else {
-                document.getElementById('uID').innerText = user.uid;
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if(snap.exists()){
-                    const data = snap.data();
-                    document.getElementById('uNameDisplay').innerText = data.name;
-                    document.getElementById('uBalance').innerText = data.balance;
-                    document.getElementById('userInitial').innerText = data.name.charAt(0).toUpperCase();
+                btn.innerText = "تسجيل";
+                if (error.code === 'auth/email-already-in-use') {
+                    alert("هذا البريد مسجل مسبقاً!");
+                } else {
+                    alert("خطأ: " + error.message);
                 }
             }
         });
-
-        window.signOutUser = () => {
-            if(confirm("هل تريد الخروج؟")) {
-                signOut(auth).then(() => window.location.href = "index.html");
-            }
-        };
     </script>
 </body>
 </html>
