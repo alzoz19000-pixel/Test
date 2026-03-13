@@ -8,159 +8,133 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; overflow-x: hidden; }
+        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; overflow-x: hidden; padding-bottom: 110px; }
         .gold-text { color: #f9d976; text-shadow: 0 0 10px rgba(249, 217, 118, 0.3); }
         .gold-bg { background: linear-gradient(135deg, #d4af37, #f9d976); }
-        
-        /* كروت فاجرة للهاتف */
-        .dark-card { 
-            background: linear-gradient(145deg, #161616, #0f0f0f); 
-            border: 1px solid rgba(255,255,255,0.05); 
-            border-radius: 28px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        }
-        .dark-card:active { transform: scale(0.92); border-color: #f9d976; box-shadow: 0 0 20px rgba(249, 217, 118, 0.2); }
-        
-        .search-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 50px; padding: 12px 20px; width: 100%; outline: none; color: #fff; font-size: 14px; text-align: center; }
-        .nav-blur { background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        /* أنيميشن المودال */
-        .modal-animate { animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .profile-glow { box-shadow: 0 0 15px rgba(249, 217, 118, 0.4); border: 2px solid #000; }
-        
-        .card-img-container { position: relative; height: 180px; overflow: hidden; }
-        .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #161616 10%, transparent 90%); }
-
-        /* ستايل الـ Bottom Navigation Bar */
-        .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; height: 85px; 
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); 
-            border-top: 1px solid rgba(255,255,255,0.05); 
-            display: flex; justify-content: space-around; align-items: center; 
-            z-index: 100; padding-bottom: 10px;
-        }
-        .home-btn-wrapper { 
-            position: relative; top: -25px; 
-        }
-        .home-btn { 
-            width: 65px; height: 65px; border-radius: 50%; 
-            display: flex; items-center; justify-content: center; 
-            border: 5px solid #050505; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
-        }
+        .dark-card { background: linear-gradient(145deg, #161616, #0f0f0f); border: 1px solid rgba(255,255,255,0.05); border-radius: 28px; transition: 0.3s; overflow: hidden; }
+        .nav-blur { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 85px; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .home-btn-wrapper { position: relative; top: -20px; }
+        .home-btn { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 5px solid #050505; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); }
+        .modal-animate { animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .info-row { display: flex; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="pb-32">
+<body>
 
-    <nav class="nav-blur p-5 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 gold-bg rounded-2xl flex items-center justify-center text-black shadow-lg rotate-3">
-                <i class="fas fa-crown text-lg"></i>
-            </div>
-            <div>
-                <h1 class="text-xl font-black italic gold-text tracking-tighter leading-none">NASR CARD</h1>
-                <p class="text-[9px] text-gray-500 font-bold tracking-[0.2em] uppercase">The King of Store</p>
-            </div>
+    <nav class="nav-blur p-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <div class="w-9 h-9 gold-bg rounded-xl flex items-center justify-center text-black shadow-lg"><i class="fas fa-crown text-sm"></i></div>
+            <h1 class="text-lg font-black gold-text italic tracking-tighter">NASR CARD</h1>
         </div>
-        <button onclick="signOutUser()" class="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-gray-400">
-            <i class="fas fa-power-off text-sm"></i>
-        </button>
+        <button onclick="signOutUser()" class="w-9 h-9 bg-[#1a1a1a] rounded-full text-gray-400"><i class="fas fa-power-off text-xs"></i></button>
     </nav>
 
     <div class="p-5 max-w-md mx-auto">
-        
-        <div class="relative w-full rounded-[2rem] overflow-hidden mb-8 border border-white/5 shadow-2xl">
-            <img src="https://img.freepik.com/free-vector/ramadan-kareem-banner-with-lanterns_1017-31181.jpg" class="w-full h-48 object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-end p-6">
-                <p class="text-white font-black text-xl italic">رمضان كريم<br><span class="gold-text text-sm">عروض حصرية في نصر كارد</span></p>
+        <div class="relative w-full rounded-[2.5rem] overflow-hidden mb-8 border border-white/5 shadow-2xl">
+            <img src="https://img.freepik.com/free-vector/ramadan-kareem-banner-with-lanterns_1017-31181.jpg" class="w-full h-44 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                <p class="text-white font-black text-xl italic leading-tight">مرحباً بك في<br><span class="gold-text">ملك الشحن</span></p>
             </div>
         </div>
 
-        <div class="dark-card p-6 mb-10 relative overflow-hidden">
-            <div class="flex justify-between items-center relative z-10">
-                <div class="flex items-center gap-4">
-                    <div id="userInitial" class="w-14 h-14 gold-bg rounded-2xl flex items-center justify-center text-black font-black text-2xl profile-glow">U</div>
-                    <div>
-                        <p id="uNameDisplay" class="font-black text-lg text-white italic">جاري التحميل..</p>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="bg-[#222] text-[10px] px-2 py-0.5 rounded-full text-gray-400">رصيدك</span>
-                            <p class="gold-text font-black text-md"><span id="uBalance">0</span> <span class="text-[10px]">EGP</span></p>
-                        </div>
+        <div class="dark-card p-6 mb-10 border-r-4 border-r-[#f9d976] shadow-xl">
+            <div class="flex items-center gap-4">
+                <div id="userInitial" class="w-14 h-14 gold-bg rounded-2xl flex items-center justify-center text-black font-black text-2xl shadow-inner">U</div>
+                <div>
+                    <p id="uNameDisplay" class="font-black text-lg text-white italic">جاري التحميل..</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="bg-[#222] text-[10px] px-2 py-0.5 rounded-full text-gray-400 font-bold">الرصيد الملكي</span>
+                        <p class="gold-text font-black text-lg"><span id="uBalance">0</span> <span class="text-[10px]">EGP</span></p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <h2 class="text-gray-500 font-black text-xs uppercase tracking-widest mb-4 px-2">الخدمات المتاحة</h2>
         <div class="grid grid-cols-1 gap-6">
-            <div onclick="openChatModal()" class="dark-card group cursor-pointer">
-                <div class="card-img-container">
+            <div onclick="openChatModal()" class="dark-card cursor-pointer group hover:border-[#f9d976]/30 transition-all">
+                <div class="relative h-48">
                     <img src="https://i.ibb.co/Chat-Section.png" class="w-full h-full object-cover">
-                    <div class="card-overlay"></div>
-                    <div class="absolute bottom-4 right-6 text-right">
-                        <h3 class="text-white font-black text-2xl italic tracking-tighter">برامج الدردشة</h3>
-                        <p class="text-gray-400 text-[10px] font-bold">شحن سريع (فوفو) ⚡</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent"></div>
+                    <div class="absolute bottom-5 right-6 text-right">
+                        <p class="text-white font-black text-2xl italic">برامج الدردشة</p>
+                        <p class="text-[#f9d976] text-[10px] font-bold">شحن فوري ⚡</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="dark-card opacity-40">
-                <div class="h-32 flex flex-col items-center justify-center gap-2">
-                    <i class="fas fa-gamepad text-4xl text-gray-700"></i>
-                    <p class="text-[10px] font-black uppercase">قريباً: شحن الألعاب</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="flex flex-col items-center text-gray-600 gap-1">
-            <i class="fas fa-cog text-xl"></i>
-            <span class="text-[8px] font-bold">الإعدادات</span>
+        <div onclick="window.location.href='orders.html'" class="flex flex-col items-center gap-1 text-gray-500 cursor-pointer">
+            <i class="fas fa-history text-xl"></i>
+            <span class="text-[9px] font-bold">السجل</span>
         </div>
 
-        <div onclick="window.location.href='recharge.html'" class="flex flex-col items-center text-gray-600 gap-1">
-            <i class="fas fa-wallet text-xl"></i>
-            <span class="text-[8px] font-bold">المحفظة</span>
+        <div onclick="window.location.href='orders.html'" class="flex flex-col items-center gap-1 text-[#f9d976] cursor-pointer">
+            <i class="fas fa-shopping-basket text-2xl"></i>
+            <span class="text-[9px] font-bold">الطلبات</span>
         </div>
 
-        <div onclick="window.location.href='dashboard.html'" class="home-btn-wrapper">
+        <div onclick="window.location.href='dashboard.html'" class="home-btn-wrapper cursor-pointer">
             <div class="home-btn gold-bg text-black">
                 <i class="fas fa-home text-2xl"></i>
             </div>
         </div>
 
-        <div onclick="window.location.href='Order.html'" class="flex flex-col items-center text-[#f9d976] gap-1">
-            <i class="fas fa-shopping-basket text-2xl"></i>
-            <span class="text-[8px] font-bold">طلباتي</span>
+        <div class="flex flex-col items-center gap-1 text-gray-500 opacity-40">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[9px] font-bold">المحفظة</span>
         </div>
 
-        <div onclick="window.location.href='Order.html'" class="flex flex-col items-center text-gray-600 gap-1">
-            <i class="fas fa-history text-xl"></i>
-            <span class="text-[8px] font-bold">السجل</span>
+        <div onclick="openSettingsModal()" class="flex flex-col items-center gap-1 text-gray-500 cursor-pointer hover:text-white transition-colors">
+            <i class="fas fa-user-gear text-xl"></i>
+            <span class="text-[9px] font-bold">حسابي</span>
         </div>
     </div>
 
-    <div id="chatModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-end justify-center">
-        <div class="bg-[#111] w-full rounded-t-[3rem] border-t border-white/10 p-8 pb-12 modal-animate">
-            <div class="w-12 h-1.5 bg-[#333] rounded-full mx-auto mb-8"></div>
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="gold-text font-black text-2xl italic">شحن فوفو</h3>
-                <button onclick="closeChatModal()" class="text-white bg-[#222] w-10 h-10 rounded-full flex items-center justify-center font-bold">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="space-y-5">
-                <input id="targetID" type="text" placeholder="أدخل ID حساب فوفو" class="search-bar !py-4 !text-lg bg-[#1a1a1a]">
-                <input id="coinInput" type="number" oninput="calculate()" placeholder="الكمية (100 ألف فأكثر)" class="search-bar !py-4 !text-lg bg-[#1a1a1a]">
-                <div class="flex justify-between items-center px-4">
-                    <span class="text-xs text-gray-500 font-bold uppercase">Price</span>
-                    <span class="gold-text font-black text-3xl"><span id="finalPrice">0</span> <span class="text-[10px]">EGP</span></span>
+    <div id="settingsModal" class="fixed inset-0 bg-black/98 z-[110] hidden flex items-center justify-center p-6">
+        <div class="bg-[#111] w-full max-w-sm rounded-[2.5rem] p-8 border border-white/10 modal-animate shadow-2xl text-center">
+            <div class="w-20 h-20 gold-bg rounded-3xl mx-auto mb-6 flex items-center justify-center text-black font-black text-3xl shadow-lg rotate-3" id="modalInitial">U</div>
+            <h3 class="gold-text font-black text-xl mb-8 italic italic tracking-tight">بيانات الحساب الملكي</h3>
+            
+            <div class="space-y-3 text-right">
+                <div class="info-row">
+                    <span class="text-gray-500 text-xs font-bold uppercase">الاسم الكامل</span>
+                    <span id="set_name" class="text-white font-bold text-sm italic">-</span>
                 </div>
-                <button id="orderBtn" onclick="sendOrder()" class="w-full gold-bg text-black font-black py-5 rounded-2xl text-xl">تأكيد الطلب</button>
+                <div class="info-row">
+                    <span class="text-gray-500 text-xs font-bold uppercase">البريد الإلكتروني</span>
+                    <span id="set_email" class="text-white font-bold text-xs">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="text-gray-500 text-xs font-bold uppercase">الرصيد الحالي</span>
+                    <span id="set_balance" class="gold-text font-black text-sm">- EGP</span>
+                </div>
+                <div class="info-row">
+                    <span class="text-gray-500 text-xs font-bold uppercase">كود المستخدم ID</span>
+                    <span id="set_id" class="text-gray-400 font-mono text-[10px]">-</span>
+                </div>
             </div>
+
+            <button onclick="closeSettingsModal()" class="w-full bg-[#222] text-white font-black py-4 rounded-2xl mt-8 active:scale-95 transition-all">إغلاق النافذة</button>
+        </div>
+    </div>
+
+    <div id="chatModal" class="fixed inset-0 bg-black/95 z-[100] hidden flex items-end justify-center">
+        <div class="bg-[#111] w-full rounded-t-[3rem] p-8 modal-animate border-t border-white/10">
+            <div class="w-10 h-1.5 bg-[#333] rounded-full mx-auto mb-8"></div>
+            <h3 class="gold-text font-black text-2xl mb-8 italic text-right">طلب شحن فوفو</h3>
+            <input id="targetID" type="text" placeholder="أدخل ID حسابك" class="w-full bg-[#1a1a1a] p-5 rounded-2xl border border-white/5 mb-5 text-center text-lg text-white">
+            <input id="coinInput" type="number" oninput="calculate()" placeholder="الكمية المطلوبة" class="w-full bg-[#1a1a1a] p-5 rounded-2xl border border-white/5 mb-5 text-center text-lg text-white">
+            <div class="flex justify-between items-center px-6 py-4 bg-black/40 rounded-2xl mb-8">
+                <span class="text-gray-500 font-bold italic">الإجمالي:</span>
+                <span class="gold-text font-black text-3xl tracking-tighter"><span id="finalPrice">0</span> <span class="text-[10px]">EGP</span></span>
+            </div>
+            <button id="orderBtn" onclick="sendOrder()" class="w-full gold-bg text-black font-black py-5 rounded-2xl text-xl shadow-lg">إرسال الطلب الآن</button>
+            <button onclick="closeChatModal()" class="w-full text-gray-500 font-bold mt-6">تراجع وإلغاء</button>
         </div>
     </div>
 
@@ -182,46 +156,66 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        window.openChatModal = () => document.getElementById('chatModal').classList.remove('hidden');
-        window.closeChatModal = () => document.getElementById('chatModal').classList.add('hidden');
+        // تحميل وعرض بيانات المستخدم
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "index.html";
+            } else {
+                try {
+                    const snap = await getDoc(doc(db, "users", user.uid));
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        const userName = data.name || "مستخدم ملكي";
+                        const userBalance = data.balance || 0;
+
+                        // تحديث واجهة Dashboard
+                        document.getElementById('uNameDisplay').innerText = userName;
+                        document.getElementById('uBalance').innerText = userBalance;
+                        document.getElementById('userInitial').innerText = userName.charAt(0).toUpperCase();
+
+                        // تجهيز بيانات مودال الإعدادات
+                        document.getElementById('set_name').innerText = userName;
+                        document.getElementById('set_email').innerText = user.email;
+                        document.getElementById('set_balance').innerText = userBalance + " EGP";
+                        document.getElementById('set_id').innerText = user.uid;
+                        document.getElementById('modalInitial').innerText = userName.charAt(0).toUpperCase();
+                    }
+                } catch (e) { console.error(e); }
+            }
+        });
+
         window.calculate = () => {
-            const amount = document.getElementById('coinInput').value;
-            const price = (amount / 100000) * 50;
-            document.getElementById('finalPrice').innerText = amount >= 100000 ? Math.round(price) : "0";
+            const v = document.getElementById('coinInput').value;
+            document.getElementById('finalPrice').innerText = v >= 100000 ? Math.round((v / 100000) * 50) : 0;
         };
 
+        window.openSettingsModal = () => document.getElementById('settingsModal').classList.remove('hidden');
+        window.closeSettingsModal = () => document.getElementById('settingsModal').classList.add('hidden');
+        window.openChatModal = () => document.getElementById('chatModal').classList.remove('hidden');
+        window.closeChatModal = () => document.getElementById('chatModal').classList.add('hidden');
+
         window.sendOrder = async () => {
-            const target = document.getElementById('targetID').value.trim();
-            const amount = document.getElementById('coinInput').value;
-            const price = document.getElementById('finalPrice').innerText;
-            if (!target || amount < 100000) return alert("تأكد من البيانات");
+            const id = targetID.value.trim();
+            const amt = coinInput.value;
+            const price = finalPrice.innerText;
+            if(!id || amt < 100000) return alert("الحد الأدنى 100,000 كوين مع كتابة الـ ID");
+
+            document.getElementById('orderBtn').disabled = true;
+            document.getElementById('orderBtn').innerText = "جاري الإرسال...";
+
             try {
                 await addDoc(collection(db, "orders"), {
                     userId: auth.currentUser.uid,
-                    userName: document.getElementById('uNameDisplay').innerText,
-                    targetAppID: target,
-                    amount: amount,
+                    userEmail: auth.currentUser.email,
+                    targetID: id,
+                    amount: amt,
                     price: price,
                     status: "pending",
                     timestamp: serverTimestamp()
                 });
-                window.location.href = `https://wa.me/201055936987?text=طلب شحن فوفو%0AID: ${target}%0Aالكمية: ${amount}`;
-            } catch (e) { alert("حدث خطأ"); }
+                window.location.href = `https://wa.me/201055936987?text=طلب جديد من ${auth.currentUser.email}%0AID: ${id}%0Aالكمية: ${amt}`;
+            } catch (e) { alert("خطأ في الاتصال"); }
         };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) window.location.href = "index.html";
-            else {
-                document.getElementById('uID').innerText = user.uid.substring(0, 8);
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if(snap.exists()){
-                    const data = snap.data();
-                    document.getElementById('uNameDisplay').innerText = data.name;
-                    document.getElementById('uBalance').innerText = data.balance;
-                    document.getElementById('userInitial').innerText = data.name.charAt(0).toUpperCase();
-                }
-            }
-        });
 
         window.signOutUser = () => signOut(auth).then(() => window.location.href = "index.html");
     </script>
