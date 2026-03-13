@@ -6,49 +6,62 @@
     <title>NASR CARD - دخول</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: 'Cairo', sans-serif; background: #f4f7fe; }
         .s-input { border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px; width: 100%; outline: none; transition: 0.3s; background: #fff; font-size: 14px; }
-        .s-input:focus { border-color: #3b82f6; background: #fff; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
-        .btn-sultan { background: linear-gradient(135deg, #007bff, #0056b3); color: white; font-weight: bold; border-radius: 14px; padding: 14px; width: 100%; transition: 0.3s; border: none; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); cursor: pointer; }
-        .btn-sultan:active { scale: 0.97; }
+        .s-input:focus { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08); }
+        .btn-sultan { background: linear-gradient(135deg, #007bff, #0056b3); color: white; font-weight: bold; border-radius: 14px; padding: 14px; width: 100%; transition: 0.3s; border: none; shadow: 0 4px 15px rgba(0, 123, 255, 0.2); cursor: pointer; }
+        .btn-google { background: white; color: #444; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; width: 100%; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; cursor: pointer; }
+        .btn-google:hover { background: #f8fafc; }
         .card-animate { animation: slideUp 0.5s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-6">
     <div class="bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-sm border border-gray-50 card-animate">
-        <div class="text-center mb-10">
+        <div class="text-center mb-8">
             <h1 class="text-4xl font-black text-blue-600 italic tracking-tighter">NASR <span class="text-gray-800">CARD</span></h1>
             <div class="h-1 w-12 bg-blue-600 mx-auto mt-2 rounded-full"></div>
         </div>
         
         <div id="loginForm" class="space-y-5">
-            <h3 class="text-center font-bold text-gray-700 mb-2 text-lg">تسجيل الدخول</h3>
+            <h3 class="text-center font-bold text-gray-700 text-lg">تسجيل الدخول</h3>
             <div class="space-y-4">
                 <input id="email" type="email" placeholder="البريد الإلكتروني" class="s-input">
                 <input id="pass" type="password" placeholder="كلمة المرور" class="s-input">
             </div>
-            <button onclick="login()" class="btn-sultan mt-2 text-lg">دخول</button>
-            <p class="text-center text-sm text-gray-500 mt-4">جديد هنا؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">أنشئ حسابك</span></p>
+            <button onclick="login()" class="btn-sultan text-lg">دخول</button>
+            
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-100"></div></div>
+                <div class="relative flex justify-center text-[10px] uppercase"><span class="px-2 bg-white text-gray-400 font-bold">أو المتابعة عبر</span></div>
+            </div>
+
+            <button onclick="loginWithGoogle()" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+                Google
+            </button>
+
+            <p class="text-center text-sm text-gray-500 mt-6">جديد هنا؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">أنشئ حساب</span></p>
         </div>
 
         <div id="regForm" class="hidden space-y-5">
-            <h3 class="text-center font-bold text-gray-700 mb-2 text-lg">إنشاء حساب جديد</h3>
+            <h3 class="text-center font-bold text-gray-700 text-lg">حساب جديد</h3>
             <div class="space-y-4">
                 <input id="regName" type="text" placeholder="الاسم بالكامل" class="s-input">
                 <input id="regEmail" type="email" placeholder="البريد الإلكتروني" class="s-input">
                 <input id="regPass" type="password" placeholder="كلمة المرور" class="s-input">
             </div>
-            <button id="regBtn" onclick="register()" class="btn-sultan bg-gradient-to-tr from-green-600 to-green-500 mt-2 text-lg">تأكيد التسجيل</button>
-            <p class="text-center text-sm text-gray-500 mt-4">لديك حساب؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">سجل دخولك</span></p>
+            <button onclick="register()" class="btn-sultan bg-gradient-to-tr from-green-600 to-green-500 text-lg">تأكيد الحساب</button>
+            <p class="text-center text-sm text-gray-500 mt-6">لديك حساب؟ <span onclick="toggle()" class="text-blue-600 cursor-pointer font-bold border-b-2 border-blue-100">سجل دخول</span></p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
@@ -62,46 +75,59 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
         window.toggle = () => {
             document.getElementById('loginForm').classList.toggle('hidden');
             document.getElementById('regForm').classList.toggle('hidden');
         };
 
+        // تسجيل الدخول
         window.login = async () => {
-            const emailVal = document.getElementById('email').value;
-            const passVal = document.getElementById('pass').value;
-            
-            if(!emailVal || !passVal) return alert("أدخل البيانات أولاً");
-
+            const e = document.getElementById('email').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            if(!e || !p) return alert("يرجى كتابة البريد وكلمة المرور");
             try { 
-                await signInWithEmailAndPassword(auth, emailVal, passVal); 
-                // التحويل سيتم عبر onAuthStateChanged تلقائياً
-            } catch(e) { 
-                alert("البريد أو كلمة المرور غير صحيحة"); 
+                await signInWithEmailAndPassword(auth, e, p); 
+            } catch(err) { 
+                alert("خطأ: البريد أو كلمة المرور غير صحيحة"); 
             }
         };
 
+        // إنشاء الحساب (التعديل المطلوب: تنبيه ثم تحويل لواجهة الدخول)
         window.register = async () => {
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const pass = document.getElementById('regPass').value;
-
-            if(!name || !email || !pass) return alert("يرجى إكمال جميع الخانات");
-
+            const n = document.getElementById('regName').value.trim();
+            const e = document.getElementById('regEmail').value.trim();
+            const p = document.getElementById('regPass').value.trim();
+            if(!n || !e || !p) return alert("أكمل البيانات أولاً");
             try {
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", res.user.uid), { 
-                    name: name, 
-                    balance: 0, 
-                    email: email, 
-                    role: "user",
-                    uid: res.user.uid
-                });
-                alert("تم إنشاء حسابك بنجاح!");
-            } catch(e) { 
-                alert("حدث خطأ: " + e.message); 
-            }
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await setDoc(doc(db, "users", res.user.uid), { name: n, balance: 0, email: e, role: "user", uid: res.user.uid });
+                
+                alert("✅ تم إنشاء الحساب بنجاح! يرجى تسجيل الدخول الآن.");
+                
+                // تسجيل الخروج فوراً ليبقى في صفحة الدخول ولا يحول للداشبورد تلقائياً
+                await signOut(auth);
+                
+                // العودة لواجهة تسجيل الدخول ومسح الخانات
+                document.getElementById('regName').value = "";
+                document.getElementById('regEmail').value = "";
+                document.getElementById('regPass').value = "";
+                toggle(); 
+                
+            } catch(err) { alert("حدث خطأ: " + err.message); }
+        };
+
+        // دخول جوجل
+        window.loginWithGoogle = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (!userDoc.exists()) {
+                    await setDoc(doc(db, "users", user.uid), { name: user.displayName, email: user.email, balance: 0, role: "user", uid: user.uid });
+                }
+            } catch (error) { alert("فشل الاتصال بجوجل"); }
         };
 
         onAuthStateChanged(auth, (user) => {
