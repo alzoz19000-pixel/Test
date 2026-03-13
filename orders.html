@@ -2,21 +2,70 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلباتي - Nasr Card</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>سجل الطلبات - Nasr Card</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style> body { font-family: 'Cairo', sans-serif; background: #f1f5f9; } </style>
+    <style>
+        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; overflow-x: hidden; padding-bottom: 110px; }
+        .gold-text { color: #f9d976; text-shadow: 0 0 10px rgba(249, 217, 118, 0.2); }
+        .gold-bg { background: linear-gradient(135deg, #d4af37, #f9d976); }
+        .nav-blur { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .order-card { background: linear-gradient(145deg, #161616, #0f0f0f); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 18px; margin-bottom: 15px; position: relative; }
+        
+        /* استايلات حالات الطلب */
+        .status-badge { padding: 5px 14px; border-radius: 10px; font-size: 11px; font-weight: 900; }
+        .status-pending { background: rgba(249, 217, 118, 0.1); color: #f9d976; border: 1px solid rgba(249, 217, 118, 0.3); }
+        .status-completed { background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-rejected { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 85px; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .home-btn-wrapper { position: relative; top: -20px; }
+        .home-btn { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 5px solid #050505; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); }
+    </style>
 </head>
 <body>
-    <div class="bg-white p-4 shadow-sm flex items-center gap-4 mb-4 sticky top-0 z-50">
-        <a href="dashboard.html" class="text-gray-500 text-xl"><i class="fas fa-arrow-right"></i></a>
-        <h1 class="text-lg font-bold">سجل الطلبات</h1>
+
+    <nav class="nav-blur p-4 flex items-center gap-4 sticky top-0 z-50">
+        <a href="dashboard.html" class="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-gray-400">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <div>
+            <h1 class="text-lg font-black gold-text italic uppercase">سجل الطلبات</h1>
+            <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Orders Management</p>
+        </div>
+    </nav>
+
+    <div id="list" class="p-5 max-w-md mx-auto">
+        <div class="text-center py-20 text-gray-600">
+            <i class="fas fa-spinner fa-spin text-3xl mb-4 gold-text"></i>
+            <p class="font-bold italic">جاري تحميل سجل عملياتك...</p>
+        </div>
     </div>
 
-    <div id="list" class="p-4 max-w-md mx-auto space-y-4">
-        <p class="text-center text-gray-400 py-10 italic">جاري تحميل طلباتك...</p>
+    <div class="bottom-nav">
+        <div onclick="window.location.href='orders.html'" class="flex flex-col items-center gap-1 text-gray-500 cursor-pointer">
+            <i class="fas fa-history text-xl"></i>
+            <span class="text-[9px] font-bold">السجل</span>
+        </div>
+        <div onclick="window.location.href='orders.html'" class="flex flex-col items-center gap-1 text-[#f9d976] cursor-pointer">
+            <i class="fas fa-shopping-basket text-2xl"></i>
+            <span class="text-[9px] font-bold">الطلبات</span>
+        </div>
+        <div onclick="window.location.href='dashboard.html'" class="home-btn-wrapper cursor-pointer">
+            <div class="home-btn gold-bg text-black">
+                <i class="fas fa-home text-2xl"></i>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-1 text-gray-500 opacity-30 cursor-not-allowed">
+            <i class="fas fa-wallet text-xl"></i>
+            <span class="text-[9px] font-bold">المحفظة</span>
+        </div>
+        <div onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-gray-500 cursor-pointer">
+            <i class="fas fa-user-gear text-xl"></i>
+            <span class="text-[9px] font-bold">حسابي</span>
+        </div>
     </div>
 
     <script type="module">
@@ -24,26 +73,89 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-        const firebaseConfig = { /* ضعي الكود هنا */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
+            authDomain: "foforecharge.firebaseapp.com",
+            projectId: "foforecharge",
+            storageBucket: "foforecharge.firebasestorage.app",
+            messagingSenderId: "23143293034",
+            appId: "1:23143293034:web:2a5e4e1914a7a8c6776a13"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         onAuthStateChanged(auth, async (u) => {
-            if(u){
-                const q = query(collection(db, "orders"), where("uid", "==", u.uid));
+            if(!u) { window.location.href = "index.html"; return; }
+
+            try {
+                const q = query(collection(db, "orders"), where("userId", "==", u.uid));
                 const snap = await getDocs(q);
-                let h = "";
+                let htmlContent = "";
+
+                if (snap.empty) {
+                    document.getElementById('list').innerHTML = `
+                        <div class="text-center py-20">
+                            <i class="fas fa-receipt text-5xl text-gray-800 mb-4"></i>
+                            <p class="text-gray-500 font-bold">لا توجد سجلات حالياً</p>
+                        </div>`;
+                    return;
+                }
+
                 snap.forEach(d => {
                     const data = d.data();
-                    const color = data.status === "مكتمل" ? "text-green-600" : "text-orange-500";
-                    h += `<div class="bg-white p-4 rounded-xl shadow-sm border-r-4 border-blue-500">
-                        <div class="flex justify-between text-[10px] text-gray-400 mb-2"><span>${data.date}</span><span class="font-bold ${color}">${data.status}</span></div>
-                        <p class="text-sm font-bold text-gray-800">شحن ${Number(data.amount).toLocaleString()} كوينز</p>
-                        <p class="text-xs text-gray-500 mt-1">ID: ${data.playerID}</p>
+                    let statusLabel = "";
+                    let statusClass = "";
+
+                    // تحديد اللون والنص بناءً على الحالة
+                    if (data.status === "completed") {
+                        statusLabel = "تم الشحن ✅";
+                        statusClass = "status-completed";
+                    } else if (data.status === "rejected") {
+                        statusLabel = "تم الرفض ❌";
+                        statusClass = "status-rejected";
+                    } else {
+                        statusLabel = "قيد التنفيذ ⏳";
+                        statusClass = "status-pending";
+                    }
+
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleDateString('ar-EG') : "قيد المعالجة";
+
+                    htmlContent += `
+                    <div class="order-card shadow-xl">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-[10px] text-gray-600 font-mono">#${d.id.substring(0,6).toUpperCase()}</span>
+                            <span class="status-badge ${statusClass}">${statusLabel}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-black/40 rounded-2xl flex items-center justify-center border border-white/5">
+                                <i class="fas fa-bolt gold-text text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-black text-white italic">شحن فوفو شات</p>
+                                <p class="text-xs text-[#f9d976] font-bold mt-0.5">${Number(data.amount).toLocaleString()} كوينز</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5 flex justify-between items-center">
+                            <div>
+                                <p class="text-[9px] text-gray-600 uppercase font-bold">ID الحساب</p>
+                                <p class="text-xs font-bold text-gray-300">${data.targetID}</p>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[9px] text-gray-600 uppercase font-bold">السعر</p>
+                                <p class="text-sm font-black text-white">${data.price} EGP</p>
+                            </div>
+                        </div>
+                        <p class="text-[9px] text-gray-700 mt-3 text-left italic font-bold">
+                            <i class="far fa-calendar-alt ml-1"></i> ${date}
+                        </p>
                     </div>`;
                 });
-                list.innerHTML = h || "<p class='text-center py-10'>لا توجد طلبات</p>";
+                document.getElementById('list').innerHTML = htmlContent;
+
+            } catch (e) {
+                document.getElementById('list').innerHTML = "<p class='text-center py-10 text-red-500'>خطأ في جلب البيانات</p>";
             }
         });
     </script>
