@@ -15,6 +15,9 @@
         .dark-card:active { transform: scale(0.95); border-color: #d4af37; }
         .search-bar { background: #1a1a1a; border: 1px solid #333; border-radius: 50px; padding: 12px 45px 12px 20px; width: 100%; outline: none; color: #fff; font-size: 14px; }
         .nav-blur { background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #222; }
+        /* أنيميشن الظهور للنافذة */
+        .modal-animate { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body class="pb-24">
@@ -72,7 +75,7 @@
 
         <div class="grid grid-cols-2 gap-4">
             
-            <div onclick="window.location.href='product.html'" class="dark-card group">
+            <div onclick="openChatModal()" class="dark-card group cursor-pointer">
                 <div class="relative h-32 overflow-hidden">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
@@ -102,11 +105,52 @@
                 </div>
                 <p class="p-3 text-center text-xs font-bold">سجل العمليات</p>
             </div>
-
         </div>
     </div>
 
-    <a href="https://wa.me/201055936987" class="fixed bottom-6 left-6 bg-[#25D366] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] z-50 text-white text-2xl transition hover:scale-110 active:scale-90">
+    <div id="chatModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-[#161616] w-full max-w-sm rounded-[2rem] border border-[#333] overflow-hidden modal-animate">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="gold-text font-black text-lg italic">خدمات الشحن</h3>
+                    <button onclick="closeChatModal()" class="text-white bg-[#222] w-8 h-8 rounded-full flex items-center justify-center">&times;</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div onclick="showCalculator()" class="dark-card p-4 flex items-center gap-4 cursor-pointer hover:border-gold-text transition-all">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K73R8YisT8S-VqYyv-YwR_xP0Xp0VzR5rA&s" class="w-12 h-12 rounded-xl">
+                        <div class="flex-1 text-right">
+                            <p class="font-bold text-sm">FOFO CHAT</p>
+                            <p class="text-[10px] text-green-500 font-bold uppercase">متوفر - شحن فوري</p>
+                        </div>
+                        <i class="fas fa-chevron-left text-gray-700"></i>
+                    </div>
+
+                    <div class="dark-card p-4 flex items-center gap-4 opacity-40 grayscale">
+                        <div class="w-12 h-12 bg-[#222] rounded-xl flex items-center justify-center text-gray-500 italic font-black">?</div>
+                        <div class="flex-1 text-right">
+                            <p class="font-bold text-sm italic">تطبيق آخر</p>
+                            <p class="text-[10px] text-gray-500 font-bold">قريباً جداً..</p>
+                        </div>
+                    </div>
+
+                    <div id="calcBox" class="hidden mt-4 p-4 bg-black/40 rounded-2xl border border-dashed border-[#333] space-y-4">
+                        <p class="text-[10px] text-center text-gray-500">أدخل الكمية (أقل كمية 100,000)</p>
+                        <input id="coinInput" type="number" oninput="calculate()" placeholder="كمية الكوينز" class="search-bar text-center font-bold !p-3">
+                        
+                        <div class="flex justify-between items-center px-2">
+                            <span class="text-xs text-gray-400 italic">السعر التقديري:</span>
+                            <span class="gold-text font-black text-lg"><span id="finalPrice">50</span> <span class="text-[10px]">EGP</span></span>
+                        </div>
+                        
+                        <button onclick="sendOrder()" class="w-full gold-bg text-black font-black p-3 rounded-xl shadow-lg active:scale-95 transition-all">اطلب الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/201055936987" class="fixed bottom-6 left-6 bg-[#25D366] w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.4)] z-50 text-white text-2xl">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -115,7 +159,6 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-        // تأكد من وضع إعدادات الفايربيز الخاصة بك هنا
         const firebaseConfig = {
             apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
             authDomain: "foforecharge.firebaseapp.com",
@@ -128,6 +171,31 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // وظائف النافذة المنبثقة
+        window.openChatModal = () => document.getElementById('chatModal').classList.remove('hidden');
+        window.closeChatModal = () => {
+            document.getElementById('chatModal').classList.add('hidden');
+            document.getElementById('calcBox').classList.add('hidden');
+        };
+        window.showCalculator = () => document.getElementById('calcBox').classList.toggle('hidden');
+
+        // حاسبة الأسعار
+        window.calculate = () => {
+            const amount = document.getElementById('coinInput').value;
+            const price = (amount / 100000) * 50;
+            document.getElementById('finalPrice').innerText = amount >= 100000 ? Math.round(price) : "0";
+        };
+
+        // إرسال الطلب
+        window.sendOrder = () => {
+            const amount = document.getElementById('coinInput').value;
+            const price = document.getElementById('finalPrice').innerText;
+            if (amount < 100000) return alert("أقل كمية شحن هي 100,000 كوين");
+            
+            const text = `طلب شحن فوفو شات 👑%0Aالكمية: ${amount}%0Aالسعر: ${price} EGP%0Aالمعرف: ${auth.currentUser.uid}`;
+            window.location.href = `https://wa.me/201055936987?text=${text}`;
+        };
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
@@ -142,26 +210,19 @@
                         document.getElementById('uBalance').innerText = data.balance;
                         document.getElementById('userInitial').innerText = data.name.charAt(0).toUpperCase();
                     }
-                } catch(e) { console.error("Error loading data"); }
+                } catch(e) { console.error("Error"); }
             }
         });
 
-        // تم إصلاح زر تسجيل الخروج ليعمل بنسبة 100%
         window.signOutUser = () => {
             if(confirm("هل تريد تسجيل الخروج؟")) {
-                signOut(auth).then(() => {
-                    window.location.href = "index.html";
-                }).catch((error) => {
-                    alert("حدث خطأ أثناء الخروج");
-                });
+                signOut(auth).then(() => window.location.href = "index.html");
             }
         };
 
         window.copyID = () => {
             const idText = document.getElementById('uID').innerText;
-            navigator.clipboard.writeText(idText).then(() => {
-                alert("تم نسخ معرف الحساب ✅");
-            });
+            navigator.clipboard.writeText(idText).then(() => alert("تم نسخ معرف الحساب ✅"));
         };
     </script>
 </body>
