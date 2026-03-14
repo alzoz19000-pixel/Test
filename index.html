@@ -87,7 +87,7 @@
             }
         };
 
-        // فحص الحالة عند فتح الصفحة (إذا كان مسجل دخول مسبقاً)
+        // فحص الحالة عند فتح الصفحة
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 smartRedirect(user);
@@ -99,21 +99,25 @@
             document.getElementById('registerBox').classList.toggle('hidden');
         };
 
+        // --- دالة حفظ المستخدم المحسنة ---
         async function saveUser(user, name) {
             const ref = doc(db, "users", user.uid);
             const snap = await getDoc(ref);
+            
+            // إذا كان المستخدم لا يملك وثيقة في Firestore، ننشئ واحدة فوراً
             if (!snap.exists()) {
                 await setDoc(ref, { 
-                    name: name, 
+                    name: name || "مستخدم جديد", 
                     email: user.email, 
                     balance: 0, 
                     uid: user.uid,
                     createdAt: new Date().toISOString()
                 });
+                console.log("تم إنشاء مستخدم جديد في Firestore ✅");
             }
         }
 
-        // تسجيل الدخول
+        // تسجيل الدخول بالبريد
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -122,6 +126,8 @@
 
             try {
                 const res = await signInWithEmailAndPassword(auth, lEmail.value, lPass.value);
+                // في تسجيل الدخول العادي، نتأكد أيضاً من وجوده في Firestore (للاحتياط)
+                await saveUser(res.user, null); 
                 smartRedirect(res.user);
             } catch (err) { 
                 alert("بيانات الدخول غير صحيحة!"); 
@@ -130,7 +136,7 @@
             }
         };
 
-        // إنشاء حساب جديد
+        // إنشاء حساب جديد بالبريد
         document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('registerBtn');
@@ -139,7 +145,9 @@
 
             try {
                 const res = await createUserWithEmailAndPassword(auth, rEmail.value, rPass.value);
-                await saveUser(res.user, `${rFirst.value} ${rLast.value}`);
+                // حفظ الاسم الكامل المكون من حقلين
+                const fullName = `${document.getElementById('rFirst').value} ${document.getElementById('rLast').value}`;
+                await saveUser(res.user, fullName);
                 smartRedirect(res.user);
             } catch (err) { 
                 alert("خطأ: " + err.message); 
@@ -148,16 +156,17 @@
             }
         };
 
-        // الدخول بجوجل
+        // الدخول بجوجل (المعدلة لحل مشكلتك)
         document.getElementById('googleBtn').onclick = async () => {
             const provider = new GoogleAuthProvider();
             try {
                 const res = await signInWithPopup(auth, provider);
+                // نمرر الاسم القادم من حساب جوجل لضمان حفظه
                 await saveUser(res.user, res.user.displayName);
                 smartRedirect(res.user);
             } catch (err) {
                 console.error(err);
-                alert("فشل الاتصال بجوجل.");
+                alert("فشل الاتصال بجوجل أو تم إلغاء العملية.");
             }
         };
     </script>
