@@ -95,12 +95,30 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- نظام الإشعارات ---
+        let isFirstLoad = true;
+        const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3');
+
+        function sendNotify(title, body) {
+            if (!isFirstLoad && Notification.permission === "granted") {
+                new Notification(title, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' });
+                notificationSound.play().catch(e => console.log("Sound error: ", e));
+            }
+        }
+
+        // طلب الإذن عند فتح الصفحة
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === "admin@nasr.com") {
                 document.getElementById('adminBody').classList.remove('hidden');
                 loadOrders();
                 loadDeposits();
                 loadUsers();
+                // منع إشعارات البيانات القديمة عند التشغيل الأول
+                setTimeout(() => { isFirstLoad = false; }, 3000);
             } else {
                 window.location.href = "index.html";
             }
@@ -111,6 +129,14 @@
             onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
                 const list = document.getElementById('ordersList');
                 document.getElementById('orderCount').innerText = snap.size + " طلب";
+
+                // فحص التغييرات للإشعارات
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && change.doc.data().status === 'pending') {
+                        sendNotify("طلب شحن جديد! ⚡", `اسم العميل: ${change.doc.data().userName}`);
+                    }
+                });
+
                 list.innerHTML = "";
                 snap.forEach(d => {
                     const o = d.data();
@@ -132,10 +158,18 @@
             });
         }
 
-        // 2. تحميل طلبات إيداع الكاش (مع عرض الصورة)
+        // 2. تحميل طلبات إيداع الكاش
         function loadDeposits() {
             onSnapshot(query(collection(db, "deposit_requests"), orderBy("timestamp", "desc")), (snap) => {
                 const list = document.getElementById('depositsList');
+
+                // فحص التغييرات للإشعارات
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && change.doc.data().status === 'pending') {
+                        sendNotify("إيداع كاش جديد! 💰", `المبلغ: ${change.doc.data().amount} EGP`);
+                    }
+                });
+
                 list.innerHTML = "";
                 snap.forEach(d => {
                     const dep = d.data();
@@ -157,7 +191,6 @@
             });
         }
 
-        // 3. معالجة الإيداع (تفعيل الرصيد)
         window.handleDeposit = async (docId, userId, amount, status) => {
             if(!confirm("هل أنت متأكد؟")) return;
             try {
@@ -176,7 +209,6 @@
             alert("تم ✅");
         };
 
-        // إدارة المستخدمين (عرض البحث)
         let allUsers = [];
         async function loadUsers() {
             onSnapshot(collection(db, "users"), (snap) => {
