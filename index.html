@@ -27,33 +27,32 @@
         </div>
 
         <div id="loginBox">
-            <h2 class="mb-6 text-gray-400">تسجيل الدخول</h2>
+            <h2 class="mb-6 text-gray-400 font-bold uppercase tracking-widest text-[10px]">Login to your account</h2>
             <form id="loginForm">
                 <input type="email" id="lEmail" placeholder="البريد الإلكتروني" class="input-field" required>
                 <input type="password" id="lPass" placeholder="كلمة السر" class="input-field" required>
-                <button type="submit" class="btn-gold">دخول</button>
+                <button type="submit" id="loginBtn" class="btn-gold">تسجيل الدخول</button>
             </form>
-            <p class="mt-6 text-sm text-gray-400">ليس لديك حساب؟ <span class="gold-text" onclick="toggleAuth()">إنشاء حساب جديد</span></p>
+            <p class="mt-6 text-xs text-gray-500">ليس لديك حساب؟ <span class="gold-text" onclick="toggleAuth()">إنشاء حساب جديد</span></p>
         </div>
 
         <div id="registerBox" class="hidden">
-            <h2 class="mb-6 text-gray-400">إنشاء حساب ملكي</h2>
+            <h2 class="mb-6 text-gray-400 font-bold uppercase tracking-widest text-[10px]">Create Royal Account</h2>
             <form id="registerForm">
                 <div class="flex gap-2">
                     <input type="text" id="rFirst" placeholder="الاسم الأول" class="input-field" required>
                     <input type="text" id="rLast" placeholder="الأخير" class="input-field" required>
                 </div>
-                <input type="text" id="rUser" placeholder="اسم المستخدم" class="input-field" required>
                 <input type="email" id="rEmail" placeholder="البريد الإلكتروني" class="input-field" required>
                 <input type="password" id="rPass" placeholder="كلمة السر" class="input-field" required>
-                <button type="submit" class="btn-gold">إنشاء الحساب</button>
+                <button type="submit" id="registerBtn" class="btn-gold">إنشاء الحساب</button>
             </form>
-            <p class="mt-6 text-sm text-gray-400">لديك حساب بالفعل؟ <span class="gold-text" onclick="toggleAuth()">سجل دخولك</span></p>
+            <p class="mt-6 text-xs text-gray-500">لديك حساب بالفعل؟ <span class="gold-text" onclick="toggleAuth()">سجل دخولك</span></p>
         </div>
 
         <div class="my-6 border-t border-white/5 pt-6">
-            <button id="googleBtn" class="w-full bg-white text-black font-bold py-3 rounded-15 flex items-center justify-center gap-2 hover:bg-gray-200 transition">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
+            <button id="googleBtn" class="w-full bg-white text-black font-bold py-3 rounded-[15px] flex items-center justify-center gap-2 hover:bg-gray-200 transition text-sm">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="16">
                 الدخول بواسطة Google
             </button>
         </div>
@@ -61,7 +60,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -77,51 +76,88 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // تبديل الواجهة
+        const ADMIN_EMAIL = "admin@nasr.com";
+
+        // دالة التوجيه الذكية
+        const smartRedirect = (user) => {
+            if (user.email === ADMIN_EMAIL) {
+                window.location.href = "admin.html";
+            } else {
+                window.location.href = "dashboard.html";
+            }
+        };
+
+        // فحص الحالة عند فتح الصفحة (إذا كان مسجل دخول مسبقاً)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                smartRedirect(user);
+            }
+        });
+
         window.toggleAuth = () => {
             document.getElementById('loginBox').classList.toggle('hidden');
             document.getElementById('registerBox').classList.toggle('hidden');
         };
 
-        // حفظ بيانات المستخدم الجديد في الداتابيز
         async function saveUser(user, name) {
             const ref = doc(db, "users", user.uid);
             const snap = await getDoc(ref);
             if (!snap.exists()) {
-                await setDoc(ref, { name: name, email: user.email, balance: 0, uid: user.uid });
+                await setDoc(ref, { 
+                    name: name, 
+                    email: user.email, 
+                    balance: 0, 
+                    uid: user.uid,
+                    createdAt: new Date().toISOString()
+                });
             }
         }
 
-        // دخول
+        // تسجيل الدخول
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "جاري التحقق...";
+            btn.disabled = true;
+
             try {
-                await signInWithEmailAndPassword(auth, lEmail.value, lPass.value);
-                window.location.href = "dashboard.html";
-            } catch (err) { alert("خطأ في البيانات!"); }
+                const res = await signInWithEmailAndPassword(auth, lEmail.value, lPass.value);
+                smartRedirect(res.user);
+            } catch (err) { 
+                alert("بيانات الدخول غير صحيحة!"); 
+                btn.innerText = "دخول";
+                btn.disabled = false;
+            }
         };
 
-        // تسجيل جديد
+        // إنشاء حساب جديد
         document.getElementById('registerForm').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('registerBtn');
+            btn.innerText = "جاري الإنشاء...";
+            btn.disabled = true;
+
             try {
                 const res = await createUserWithEmailAndPassword(auth, rEmail.value, rPass.value);
                 await saveUser(res.user, `${rFirst.value} ${rLast.value}`);
-                window.location.href = "dashboard.html";
-            } catch (err) { alert("حدث خطأ في التسجيل: " + err.message); }
+                smartRedirect(res.user);
+            } catch (err) { 
+                alert("خطأ: " + err.message); 
+                btn.innerText = "إنشاء الحساب";
+                btn.disabled = false;
+            }
         };
 
-        // حل مشكلة جوجل
+        // الدخول بجوجل
         document.getElementById('googleBtn').onclick = async () => {
             const provider = new GoogleAuthProvider();
             try {
-                // نستخدم Popup، تأكد من تفعيل الدومين في Firebase Console
                 const res = await signInWithPopup(auth, provider);
                 await saveUser(res.user, res.user.displayName);
-                window.location.href = "dashboard.html";
+                smartRedirect(res.user);
             } catch (err) {
                 console.error(err);
-                alert("جوجل رفض الاتصال. تأكد من إضافة رابط الموقع في Authorized Domains داخل Firebase.");
+                alert("فشل الاتصال بجوجل.");
             }
         };
     </script>
