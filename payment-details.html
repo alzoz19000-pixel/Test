@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تأكيد الإيداع - NASR CARD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; padding: 20px; padding-bottom: 50px; }
+        .gold-text { color: #f9d976; }
+        .gold-bg { background: linear-gradient(135deg, #d4af37, #f9d976); }
+        .input-box { background: #111; border: 1px solid #222; border-radius: 15px; padding: 15px; width: 100%; color: white; margin-bottom: 15px; outline: none; }
+        .input-box:focus { border-color: #f9d976; }
+        .instr-card { background: rgba(249, 217, 118, 0.05); border-right: 4px solid #f9d976; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        #file-name { color: #f9d976; font-size: 11px; margin-top: 5px; display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-md mx-auto">
+        <div class="flex items-center gap-4 mb-6">
+            <button onclick="history.back()" class="text-gray-400 text-xl"><i class="fas fa-chevron-right"></i></button>
+            <h1 class="text-xl font-black gold-text uppercase italic">VODAFONE CASH</h1>
+        </div>
+
+        <div class="instr-card text-sm leading-relaxed">
+            <p class="font-bold mb-2">📢 تعليمات الإيداع:</p>
+            <ul class="space-y-1 text-gray-300">
+                <li>• الحد الأدنى للإيداع هو <span class="gold-text font-bold">100 جنيه</span></li>
+                <li>• <span class="text-red-500 font-bold">يجب</span> إرفاق صورة واضحة لإيصال التحويل.</li>
+            </ul>
+        </div>
+
+        <div class="bg-[#111] p-5 rounded-2xl border border-dashed border-[#f9d976]/40 text-center mb-6">
+            <p class="text-[10px] text-gray-500 font-bold mb-1 uppercase">رقم التحويل</p>
+            <p class="text-2xl font-black text-white mb-3">01055940783</p>
+            <button onclick="navigator.clipboard.writeText('01055940783'); alert('تم النسخ');" class="bg-white/5 px-4 py-2 rounded-xl text-[11px]">نسخ الرقم</button>
+        </div>
+
+        <div class="space-y-4">
+            <input id="senderNum" type="number" placeholder="رقمك الذي حولت منه" class="input-box">
+            <input id="amountSent" type="number" placeholder="المبلغ (مثال: 100)" class="input-box">
+
+            <div class="bg-[#222]/30 p-5 rounded-xl border-2 border-dashed border-gray-700 text-center">
+                <label for="proofImg" class="cursor-pointer">
+                    <i class="fas fa-camera text-2xl mb-2 gold-text"></i>
+                    <p class="text-xs font-bold text-gray-400">اضغط لرفع صورة إيصال التحويل</p>
+                    <span id="file-name">لم يتم اختيار صورة بعد</span>
+                </label>
+                <input type="file" id="proofImg" accept="image/*" class="hidden" onchange="updateFileName()">
+            </div>
+
+            <button id="submitBtn" onclick="submitDeposit()" class="w-full gold-bg text-black font-black py-5 rounded-2xl shadow-lg text-lg active:scale-95 transition-all">
+                إرسال الطلب للمراجعة
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAzsg4K2-AFKQwtlGbr--EszuUzQRQeYD8",
+            authDomain: "foforecharge.firebaseapp.com",
+            projectId: "foforecharge",
+            storageBucket: "foforecharge.appspot.com", // تأكد من صحة هذا الرابط من الكونسول
+            messagingSenderId: "23143293034",
+            appId: "1:23143293034:web:2a5e4e1914a7a8c6776a13"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+        onAuthStateChanged(auth, user => currentUser = user);
+
+        // وظيفة تحديث اسم الملف عند الاختيار
+        window.updateFileName = () => {
+            const file = document.getElementById('proofImg').files[0];
+            document.getElementById('file-name').innerText = file ? "✅ تم اختيار: " + file.name : "لم يتم اختيار صورة بعد";
+        };
+
+        window.submitDeposit = async () => {
+            const sender = document.getElementById('senderNum').value;
+            const amount = document.getElementById('amountSent').value;
+            const file = document.getElementById('proofImg').files[0];
+            const btn = document.getElementById('submitBtn');
+
+            // التحقق الإجباري
+            if(!sender || amount < 100) return alert("يرجى إكمال البيانات والمبلغ (الأدنى 100)");
+            if(!file) return alert("❌ يجب إرفاق صورة إيصال التحويل!");
+
+            btn.disabled = true;
+            btn.innerText = "جاري رفع الصورة والطلب...";
+
+            try {
+                // 1. رفع الصورة إلى Storage
+                const storageRef = ref(storage, `receipts/${Date.now()}_${currentUser.uid}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                // 2. حفظ الطلب في Firestore
+                await addDoc(collection(db, "deposit_requests"), {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    senderNumber: sender,
+                    amount: Number(amount),
+                    proofImage: downloadURL, // رابط الصورة
+                    status: "pending",
+                    timestamp: serverTimestamp()
+                });
+
+                alert("تم إرسال طلبك بنجاح! سيتم المراجعة وإضافة الرصيد. ✅");
+                window.location.href = "dashboard.html";
+            } catch (e) {
+                console.error(e);
+                alert("حدث خطأ أثناء الرفع، تأكد من إعدادات الـ Storage في فايربيز.");
+                btn.disabled = false;
+                btn.innerText = "إرسال الطلب للمراجعة";
+            }
+        };
+    </script>
+</body>
+</html>
